@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract BasicNft is ERC721Upgradeable {
+contract BasicNft is ERC721 {
     uint256 private tokenCounter;
     mapping(uint256 => string) private tokenIdToUri;
 
-    constructor() initializer {
-        __ERC721_init("Dogie", "DOG");
+    constructor() ERC721("Dogie", "DOG") {
         tokenCounter = 0;
     }
 

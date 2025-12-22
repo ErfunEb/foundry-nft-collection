@@ -7,7 +7,8 @@ contract BasicNft is ERC721Upgradeable {
     uint256 private tokenCounter;
     mapping(uint256 => string) private tokenIdToUri;
 
-    constructor() ERC721("Dogie", "DOG") {
+    constructor() initializer {
+        __ERC721_init("Dogie", "DOG");
         tokenCounter = 0;
     }
 

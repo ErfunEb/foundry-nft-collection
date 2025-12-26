@@ -1,69 +1,189 @@
-## Foundry
+# Foundry NFT Collection
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A **Foundry-based NFT project** containing two ERC-721 contracts:
 
-Foundry consists of:
+- **BasicNft** – a simple NFT with externally supplied token URIs
+- **MoodNft** – an on-chain SVG NFT whose metadata and image change based on mood
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+The project includes a Makefile-driven workflow for deploying and interacting with the contracts on **Anvil (local)** and **Sepolia**.
 
-## Documentation
+---
 
-https://book.getfoundry.sh/
+## 🧱 Tech Stack
 
-## Usage
+- **Solidity 0.8.30**
+- **Foundry** (forge, cast)
+- **OpenZeppelin Contracts**
+- **Makefile** for automation
 
-### Build
+---
 
-```shell
-$ forge build
+## 📂 Contracts Overview
+
+### 🐶 BasicNft
+
+- ERC721 name: `Dogie`
+- Symbol: `DOG`
+- Each token stores a custom `tokenURI`
+- Anyone can mint
+
+```solidity
+function mintNft(string memory tokenUri) public;
 ```
 
-### Test
+---
 
-```shell
-$ forge test
+### 😄 MoodNft
+
+- ERC721 name: `Mood NFT`
+- Symbol: `MN`
+- Fully on-chain metadata (Base64 JSON)
+- SVG image switches between **HAPPY** and **SAD**
+- Only owner or approved address can flip mood
+
+```solidity
+function mintNft() public;
+function flipMood(uint256 tokenId) public;
 ```
 
-### Format
+---
 
-```shell
-$ forge fmt
+## ⚙️ Environment Setup
+
+### 1️⃣ Install Foundry
+
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
 ```
 
-### Gas Snapshots
+---
 
-```shell
-$ forge snapshot
+### 2️⃣ Create `.env` file
+
+Copy the example:
+
+```bash
+cp .env.example .env
 ```
 
-### Anvil
+Fill in:
 
-```shell
-$ anvil
+```env
+SEPOLIA_RPC_URL=
+ANVIL_KEY_NAME=
+SEPOLIA_KEY_NAME=
 ```
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+> Keys must already exist in Foundry:
+```bash
+cast wallet list
 ```
 
-### Cast
+---
 
-```shell
-$ cast <subcommand>
+## 🛠 Makefile Commands
+
+### 🔹 Deploy Basic NFT (Local / Anvil)
+
+```bash
+make deploy-basic-nft
 ```
 
-### Help
+### 🔹 Deploy Basic NFT (Sepolia)
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+```bash
+make deploy-basic-nft SEPOLIA=true
 ```
 
+---
 
-{"name": "Mood NFT", "description": "An NFT that reflects the owners mood.", "attributes": [{"traint_type": "moodiness", "value": 100}], "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNHB4IiBoZWlnaHQ9IjEwMjRweCIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZmlsbD0iIzMzMyIgZD0iTTUxMiA2NEMyNjQuNiA2NCA2NCAyNjQuNiA2NCA1MTJzMjAwLjYgNDQ4IDQ0OCA0NDggNDQ4LTIwMC42IDQ0OC00NDhTNzU5LjQgNjQgNTEyIDY0em0wIDgyMGMtMjA1LjQgMC0zNzItMTY2LjYtMzcyLTM3MnMxNjYuNi0zNzIgMzcyLTM3MiAzNzIgMTY2LjYgMzcyIDM3Mi0xNjYuNiAzNzItMzcyIDM3MnoiLz4NCiAgPHBhdGggZmlsbD0iI0U2RTZFNiIgZD0iTTUxMiAxNDBjLTIwNS40IDAtMzcyIDE2Ni42LTM3MiAzNzJzMTY2LjYgMzcyIDM3MiAzNzIgMzcyLTE2Ni42IDM3Mi0zNzItMTY2LjYtMzcyLTM3Mi0zNzJ6TTI4OCA0MjFhNDguMDEgNDguMDEgMCAwIDEgOTYgMCA0OC4wMSA0OC4wMSAwIDAgMS05NiAwem0zNzYgMjcyaC00OC4xYy00LjIgMC03LjgtMy4yLTguMS03LjRDNjA0IDYzNi4xIDU2Mi41IDU5NyA1MTIgNTk3cy05Mi4xIDM5LjEtOTUuOCA4OC42Yy0uMyA0LjItMy45IDcuNC04LjEgNy40SDM2MGE4IDggMCAwIDEtOC04LjRjNC40LTg0LjMgNzQuNS0xNTEuNiAxNjAtMTUxLjZzMTU1LjYgNjcuMyAxNjAgMTUxLjZhOCA4IDAgMCAxLTggOC40em0yNC0yMjRhNDguMDEgNDguMDEgMCAwIDEgMC05NiA0OC4wMSA0OC4wMSAwIDAgMSAwIDk2eiIvPg0KICA8cGF0aCBmaWxsPSIjMzMzIiBkPSJNMjg4IDQyMWE0OCA0OCAwIDEgMCA5NiAwIDQ4IDQ4IDAgMSAwLTk2IDB6bTIyNCAxMTJjLTg1LjUgMC0xNTUuNiA2Ny4zLTE2MCAxNTEuNmE4IDggMCAwIDAgOCA4LjRoNDguMWM0LjIgMCA3LjgtMy4yIDguMS03LjQgMy43LTQ5LjUgNDUuMy04OC42IDk1LjgtODguNnM5MiAzOS4xIDk1LjggODguNmMuMyA0LjIgMy45IDcuNCA4LjEgNy40SDY2NGE4IDggMCAwIDAgOC04LjRDNjY3LjYgNjAwLjMgNTk3LjUgNTMzIDUxMiA1MzN6bTEyOC0xMTJhNDggNDggMCAxIDAgOTYgMCA0OCA0OCAwIDEgMC05NiAweiIvPg0KPC9zdmc+DQo="}
+### 🔹 Mint Basic NFT
+
+```bash
+make mint-basic-nft
+```
+
+---
+
+### 🔹 Deploy Mood NFT
+
+```bash
+make deploy-mood-nft
+```
+
+Supports both **local** and **Sepolia** via `SEPOLIA=true`.
+
+---
+
+## 📦 Deployment Artifacts
+
+After deployment, the latest broadcast file is copied to:
+
+```text
+script/deployments/basicNft.json
+```
+
+This file contains:
+- Deployed contract address
+- Transaction hash
+- Chain ID
+
+---
+
+## 🧪 Testing
+
+### Run all tests
+```bash
+forge test
+```
+
+### Run tests with verbosity
+```bash
+forge test -vvv
+```
+
+### Run a specific test file
+```bash
+forge test --match-path test/BasicNft.t.sol
+```
+
+### Run a specific test function
+```bash
+forge test --match-test testMintNft
+```
+
+---
+
+## 🧰 Useful Foundry Commands
+
+```bash
+forge build      # Compile contracts
+forge clean      # Clear cache
+forge fmt        # Format Solidity code
+forge snapshot   # Gas snapshots
+```
+
+---
+
+## 🔐 Security Notes
+
+- Uses OpenZeppelin ERC721
+- `MoodNft` enforces ownership & approvals
+- No upgradeability
+- Intended for learning & experimentation
+
+---
+
+## 🚀 Roadmap (Ideas)
+
+- Add royalties (ERC2981)
+- Add events for minting and mood flips
+- Add IPFS-based metadata option
+- Add fuzz & invariant tests
+
+---
+
+## 📜 License
+
+MIT

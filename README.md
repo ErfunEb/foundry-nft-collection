@@ -175,15 +175,6 @@ forge snapshot   # Gas snapshots
 
 ---
 
-## 🚀 Roadmap (Ideas)
-
-- Add royalties (ERC2981)
-- Add events for minting and mood flips
-- Add IPFS-based metadata option
-- Add fuzz & invariant tests
-
----
-
 ## 📜 License
 
 MIT

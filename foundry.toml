@@ -8,4 +8,10 @@ fs_permissions = [
   { access = "read", path = "./images/"}
 ]
 
+[lint]
+exclude_lints  = [
+  "unsafe-cheatcode",
+  "mixed-case-function"
+]
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

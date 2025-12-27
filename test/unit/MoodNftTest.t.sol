@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
+import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 import {Test} from "forge-std/Test.sol";
 import {MoodNft} from "src/MoodNft.sol";
-import {console} from "forge-std/console.sol";
 
 contract MoodNftTest is Test {
     MoodNft moodNft;
@@ -21,6 +21,29 @@ contract MoodNftTest is Test {
     function testViewTokenURI() public {
         vm.prank(user);
         moodNft.mintNft();
-        console.log(moodNft.tokenURI(0));
+        string memory mintedNft = moodNft.tokenURI(0);
+        string memory expectedMintedNft = string(
+            abi.encodePacked(
+                "data:application/json;base64,",
+                Base64.encode(
+                    bytes(
+                        abi.encodePacked(
+                            "{",
+                            '"name": "',
+                            moodNft.name(),
+                            '", "description": "An NFT that reflects the owners mood.", ',
+                            '"attributes": [{"traint_type": "moodiness", "value": 100}], "image": "',
+                            HAPPY_SVG_URI,
+                            '"}'
+                        )
+                    )
+                )
+            )
+        );
+
+        assert(
+            keccak256(abi.encodePacked(mintedNft)) ==
+                keccak256(abi.encodePacked(expectedMintedNft))
+        );
     }
 }
